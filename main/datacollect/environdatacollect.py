@@ -6,6 +6,16 @@
 #
 #
 
+OK = 0
+ERROR = 1
+CRITICAL=50
+ERROR=40
+WARNING=30
+INFO=20
+DEBUG=10
+NOTSET=0
+
+
 import sys
 import time
 
@@ -13,6 +23,14 @@ import RPi.GPIO as GPIO
 import re
 import math
 import subprocess
+import serial
+
+sys.path.append('./pclogging')
+sys.path.append('./util')
+
+
+import util
+import pclogging
 
 from luxmeter import Luxmeter
 from Adafruit_BMP085 import *
@@ -27,6 +45,7 @@ def  environdatacollect(source, delay):
 	time.sleep(delay)
 	# blink GPIO LED when it's run
 	# double blink
+	GPIO.setmode(GPIO.BOARD)
         GPIO.setup(22, GPIO.OUT)
         GPIO.output(22, False)
         time.sleep(0.5)
@@ -95,14 +114,77 @@ def  environdatacollect(source, delay):
 
 
 
+	# setup serial port to Arduino
+
+	# interrupt Arduino to start listening
+
+	
+	GPIO.setmode(GPIO.BOARD)	
+	GPIO.setup(7, GPIO.OUT, pull_up_down=GPIO.PUD_DOWN)
+	GPIO.output(7, False)
+	GPIO.output(7, True)
+	GPIO.output(7, False)
+	
 
 	# Outside Temperature
 
-	# these are NOT implemented yet.  Comes from Arduino
-	outsidetemperature = insidetemperature
-	# Outside Humidity
-	# these are NOT implemented yet.  Comes from Arduino
-	outsidehumidity = insidehumidity
+
+	# read the latest value from the Arduino
+
+
+	# Send the GD (Get Data) Command
+	ser = serial.Serial('/dev/ttyAMA0', 9600, timeout=1)
+	ser.open()
+	time.sleep(7.0)
+
+	# send the first "are you there? command - RD - return from Arduino OK"
+		
+        response = util.sendCommandAndRecieve(ser, "RD")
+	print("response=", response);
+	
+	if (response == "OK\n"):
+		print "Good RD Response"
+	else:
+		print "bad response from RD"
+		pclogging.log(ERROR, __name__, "RD failed from Pi to BatteryWatchDog")
+                ser.close()
+		return
+	# Read the value
+
+        response = util.sendCommandAndRecieve(ser, "GTH")
+	print("response=", response);
+	
+
+
+	# stuff the values into variables
+	splitList = response.split(',')
+	print(splitList)	
+
+	if (len(splitList) == 2):
+		outsidetemperature = float(splitList[0])
+        	outsidehumidity = float(splitList[1])
+	else:
+		print "bad response from GTH"
+		# system setup
+
+		pclogging.log(ERROR, __name__, "GTH failed from Pi to BatteryWatchDog")
+
+		# say goodby  
+        	response = util.sendCommandAndRecieve(ser, "GB")
+		print("response=", response);
+		ser.close()
+		return
+	
+
+
+	print("response=", response);
+
+	# say goodby  
+        response = util.sendCommandAndRecieve(ser, "GB")
+	print("response=", response);
+
+	ser.close()
+
 
 	# Luminosity
 	luminosity = -1000.0 # bad data

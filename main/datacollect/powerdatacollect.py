@@ -11,7 +11,6 @@ import time
 import RPi.GPIO as GPIO
 
 from Subfact_ina219 import INA219
-import RPi.GPIO as GPIO
 from Adafruit_ADS1x15 import ADS1x15
 
 import MySQLdb as mdb
@@ -23,7 +22,8 @@ def  datacollect5minutes(source, delay):
 
 	time.sleep(delay)
 	# blink GPIO LED when it's run
-        GPIO.setup(22, GPIO.OUT)
+        GPIO.setmode(GPIO.BOARD)
+	GPIO.setup(22, GPIO.OUT)
         GPIO.output(22, False)
         time.sleep(0.5)
         GPIO.output(22, True)

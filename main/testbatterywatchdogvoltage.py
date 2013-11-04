@@ -1,5 +1,3 @@
-
-
 """
 testModule.py
 JCS 9/10/2013 Version 1.0
@@ -28,9 +26,9 @@ sys.path.append('./graphprep')
 sys.path.append('./hardware')
 sys.path.append('./housekeeping')
 
-import powerdatacollect 
+import batterywatchdogvoltagegraph 
 
 
-powerdatacollect.datacollect5minutes("test",1)
-#systemstatistics.systemstatistics15minutes("test")
+
+batterywatchdogvoltagegraph.batterywatchdogvoltagegraph("test",5, 1.0)
 

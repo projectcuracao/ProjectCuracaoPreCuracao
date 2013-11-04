@@ -1,10 +1,8 @@
-
-
 """
-testModule.py
-JCS 9/10/2013 Version 1.0
+testUseCamera
+JCS 10/31/2013 Version 1.0
 
-This program runs the data collection, graph preperation, housekeeping and actions
+This program runs the data collection from the watchdog
 """
 
 # shelves:
@@ -18,19 +16,21 @@ from datetime import datetime, timedelta
 import sys
 import time
 
-from apscheduler.scheduler import Scheduler
-from apscheduler.jobstores.shelve_store import ShelveJobStore
-
 
 
 sys.path.append('./datacollect')
 sys.path.append('./graphprep')
 sys.path.append('./hardware')
 sys.path.append('./housekeeping')
+sys.path.append('./actions')
+sys.path.append('./util')
 
-import powerdatacollect 
+import useCamera 
+import hardwareactions
 
 
-powerdatacollect.datacollect5minutes("test",1)
-#systemstatistics.systemstatistics15minutes("test")
+
+useCamera.takeSinglePicture("test", 1)
+#time.sleep(5)
+#useCamera.sweepShutter("test", 1)
 

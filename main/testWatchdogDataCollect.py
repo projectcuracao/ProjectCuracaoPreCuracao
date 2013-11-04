@@ -31,6 +31,7 @@ sys.path.append('./housekeeping')
 import watchdogdatacollect 
 
 
-
-watchdogdatacollect.watchdogdatacollect("test", 1)
+while True:
+	watchdogdatacollect.watchdogdatacollect("test", 1)
+	time.sleep(1.0)
 

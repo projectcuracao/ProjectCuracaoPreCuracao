@@ -35,7 +35,8 @@ def  environmentalgraph(source,days,delay):
 	
 
 	# blink GPIO LED when it's run
-        GPIO.setup(22, GPIO.OUT)
+        GPIO.setmode(GPIO.BOARD)
+	GPIO.setup(22, GPIO.OUT)
         GPIO.output(22, False)
         time.sleep(0.5)
         GPIO.output(22, True)
