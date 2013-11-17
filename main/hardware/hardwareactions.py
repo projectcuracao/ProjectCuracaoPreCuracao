@@ -34,6 +34,22 @@ def setfan(value):
 
         return True
 
+def returnFanState():
+
+
+	# Fan State
+	
+	# read from fan state file
+        try:
+		f = open("./state/fanstate.txt", "r")
+		tempString = f.read()
+        	f.close()
+        	fanstate = int(tempString)
+	except IOError as e:
+		fanstate = 0
+
+	return fanstate
+
 
 def openshutter():
 

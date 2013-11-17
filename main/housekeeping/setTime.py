@@ -17,14 +17,6 @@ sys.path.append('./util')
 import pclogging
 import util
 
-OK = 0
-ERROR = 1 
-CRITICAL=50
-ERROR=40
-WARNING=30
-INFO=20
-DEBUG=10
-NOTSET=0
 
 
 
@@ -69,7 +61,7 @@ def  setTime(source, delay):
 		print "Good RD Response"
 	else:
 		print "bad response from RD"
-		pclogging.log(ERROR, __name__, "RD failed from Pi to BatteryWatchDog")
+		pclogging.log(pclogging.ERROR, __name__, "RD failed from Pi to BatteryWatchDog")
                 ser.close()
 		return
 	# Read the value
@@ -88,26 +80,19 @@ def  setTime(source, delay):
 		#myTimeString = time.strftime("%Y/%m/%d %H:%M:%S", time.gmtime())
 
         	response = util.sendCommandAndRecieve(ser, myDateString)
-		#if (response == "OK\n"):
-		#	print "Good ST-1 Response"
-		#else:
-		#	print "bad response from ST-1 second line"
-		#	pclogging.log(ERROR, __name__, "ST-1  second line failed from Pi to BatteryWatchDog")
-                #	ser.close()
-		#	return
 
         	response = util.sendCommandAndRecieve(ser, myTimeString)
 		if (response == "OK\n"):
 			print "Good ST-2 Response"
 		else:
 			print "bad response from ST-2 third line"
-			pclogging.log(ERROR, __name__, "ST-2  second line failed from Pi to BatteryWatchDog")
+			pclogging.log(pclogging.ERROR, __name__, "ST-2  second line failed from Pi to BatteryWatchDog")
                 	ser.close()
 			return
 
 	else:
 		print "bad response from ST"
-		pclogging.log(ERROR, __name__, "ST failed from Pi to BatteryWatchDog")
+		pclogging.log(pclogging.ERROR, __name__, "ST failed from Pi to BatteryWatchDog")
                 ser.close()
 		return
 
@@ -116,7 +101,7 @@ def  setTime(source, delay):
 	# say goodby  
         response = util.sendCommandAndRecieve(ser, "GB")
 	print("response=", response);
-	pclogging.log(INFO, __name__, "ST - Time Set on Arduino to Pi Time ")
+	pclogging.log(pclogging.INFO, __name__, "ST - Time Set on Arduino to Pi Time ")
 
 	ser.close()
 		

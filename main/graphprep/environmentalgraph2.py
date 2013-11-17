@@ -24,6 +24,16 @@ import pylab
 
 import MySQLdb as mdb
 
+sys.path.append('/home/pi/ProjectCuracao/main/config')
+
+# if conflocal.py is not found, import default conf.py
+
+# Check for user imports
+try:
+	import conflocal as conf
+except ImportError:
+	import conf
+
 def  environmentalgraph2(source,days,delay):
 
 
@@ -45,7 +55,7 @@ def  environmentalgraph2(source,days,delay):
 
 	try:
 		print("trying database")
-    		db = mdb.connect('localhost', 'root', 'bleh0101', 'ProjectCuracao');
+    		db = mdb.connect('localhost', 'root', conf.databasePassword, 'ProjectCuracao');
 
     		cursor = db.cursor()
 

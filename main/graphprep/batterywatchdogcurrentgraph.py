@@ -24,6 +24,16 @@ import pylab
 
 import MySQLdb as mdb
 
+sys.path.append('/home/pi/ProjectCuracao/main/config')
+
+# if conflocal.py is not found, import default conf.py
+
+# Check for user imports
+try:
+	import conflocal as conf
+except ImportError:
+	import conf
+
 def  batterywatchdogcurrentgraph(source,days,delay):
 
 
@@ -45,7 +55,7 @@ def  batterywatchdogcurrentgraph(source,days,delay):
 
 	try:
 		print("trying database")
-    		db = mdb.connect('localhost', 'root', 'bleh0101', 'ProjectCuracao');
+    		db = mdb.connect('localhost', 'root', conf.databasePassword, 'ProjectCuracao');
 
     		cursor = db.cursor()
 
@@ -92,8 +102,8 @@ def  batterywatchdogcurrentgraph(source,days,delay):
 		pylab.ylabel("Current ma")
 		pylab.legend(loc='upper left')
 
-		if (max(v) > max(s)):
-			myMax = max(v)
+		if (max(u) > max(s)):
+			myMax = max(u)+ 100.0
 		else:
 			myMax = max(s)
 		pylab.axis([min(t), max(t), min(u), myMax])

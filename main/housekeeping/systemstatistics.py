@@ -13,6 +13,16 @@ import subprocess
 import MySQLdb as mdb
 import psutil
 
+sys.path.append('/home/pi/ProjectCuracao/main/config')
+
+# if conflocal.py is not found, import default conf.py
+
+# Check for user imports
+try:
+	import conflocal as conf
+except ImportError:
+	import conf
+
 def  systemstatistics15minutes(source,delay):
 
 	print("systemstatistics15minutes source:%s" % source)
@@ -88,7 +98,7 @@ def  systemstatistics15minutes(source,delay):
 
 	try:
 		print("trying database")
-    		con = mdb.connect('localhost', 'root', 'bleh0101', 'ProjectCuracao');
+    		con = mdb.connect('localhost', 'root', conf.databasePassword, 'ProjectCuracao');
 
     		cur = con.cursor()
 		print "before query"

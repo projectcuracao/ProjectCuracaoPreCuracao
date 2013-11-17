@@ -6,23 +6,29 @@
 #
 # contains logging data 
 #
-#CRITICAL	50
-#ERROR	40
-#WARNING	30
-#INFO	20
-#DEBUG	10
-#NOTSET	0
 
-#CRITICAL=50
-#ERROR=40
-#WARNING=30
-#INFO=20
-#DEBUG=10
-#NOTSET=0
+
+CRITICAL=50
+ERROR=40
+WARNING=30
+INFO=20
+DEBUG=10
+NOTSET=0
+
 
 import sys
 import time
 import MySQLdb as mdb
+
+sys.path.append('/home/pi/ProjectCuracao/main/config')
+
+# if conflocal.py is not found, import default conf.py
+
+# Check for user imports
+try:
+	import conflocal as conf
+except ImportError:
+	import conf
 
 #def clearlog():
 
@@ -50,13 +56,13 @@ def log(level, source, message):
         try:
 	
                 #print("trying database")
-                con = mdb.connect('localhost', 'root', 'bleh0101', 'ProjectCuracao');
+                con = mdb.connect('localhost', 'root', conf.databasePassword, 'ProjectCuracao');
 
                 cur = con.cursor()
                 #print "before query"
 
                 query = "INSERT INTO systemlog(TimeStamp, Level, Source, Message) VALUES(UTC_TIMESTAMP(), %i, '%s', '%s')" % (level, source, message)
-                print("query=%s" % query)
+	        #print("query=%s" % query)
 
                 cur.execute(query)
 

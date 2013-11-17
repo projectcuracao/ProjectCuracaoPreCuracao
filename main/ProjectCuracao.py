@@ -44,6 +44,16 @@ import watchdogdatacollect
 import hardwareactions
 import useCamera
 import pclogging
+import util
+import sendPictureEmail
+
+# if conflocal.py is not found, import default conf.py
+
+# Check for user imports
+try:
+	import conflocal as conf
+except ImportError:
+	import conf
 
 
 if __name__ == '__main__':
@@ -59,7 +69,8 @@ if __name__ == '__main__':
     
     # log system startup
  
-    pclogging.log(CRITICAL, __name__, "Project Curacao Startup")
+    pclogging.log(pclogging.CRITICAL, __name__, "Project Curacao Startup")
+    util.sendEmail("test", "ProjectCuracao Pi Bootup", "The Raspberry Pi has rebooted.", conf.notifyAddress,  conf.fromAddress, "");
     GPIO.setmode(GPIO.BOARD)	
     GPIO.setup(7, GPIO.OUT, pull_up_down=GPIO.PUD_DOWN)
     # set initial hardware actions 
@@ -92,6 +103,8 @@ if __name__ == '__main__':
 
     # camera 
     job = scheduler.add_cron_job(useCamera.takeSinglePicture, hour="*", args=['main',50])    
+    # send daily picture
+    job = scheduler.add_cron_job(sendPictureEmail.sendPictureEmail, hour="22",minute="20", args=['main',0])    
 
 
     sys.stdout.write('Press Ctrl+C to exit\n')

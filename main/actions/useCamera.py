@@ -20,16 +20,6 @@ import pclogging
 import util
 import hardwareactions
 
-OK = 0
-ERROR = 1 
-CRITICAL=50
-ERROR=40
-WARNING=30
-INFO=20
-DEBUG=10
-NOTSET=0
-
-
 
 
 def  sweepShutter(source, delay):
@@ -52,7 +42,7 @@ def  sweepShutter(source, delay):
 
 
 
-	pclogging.log(INFO, __name__, "Sweep Shutter")
+	pclogging.log(pclogging.INFO, __name__, "Sweep Shutter")
 
 def  takePicture(source):
 	# take picture
@@ -60,7 +50,7 @@ def  takePicture(source):
 	output = subprocess.check_output ("raspistill -o /home/pi/RasPiConnectServer/static/picameraraw.jpg -t 0",shell=True, stderr=subprocess.STDOUT )
 	output = subprocess.check_output("convert '/home/pi/RasPiConnectServer/static/picameraraw.jpg' -pointsize 72 -fill white -gravity SouthWest -annotate +50+100 'ProjectCuracao %[exif:DateTimeOriginal]' '/home/pi/RasPiConnectServer/static/picamera.jpg'", shell=True, stderr=subprocess.STDOUT)
 
-	pclogging.log(INFO, __name__, source )
+	pclogging.log(pclogging.INFO, __name__, source )
 
 	print "finished taking picture"
 	return

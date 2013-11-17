@@ -6,14 +6,6 @@
 #
 #
 
-OK = 0
-ERROR = 1
-CRITICAL=50
-ERROR=40
-WARNING=30
-INFO=20
-DEBUG=10
-NOTSET=0
 
 
 import sys
@@ -27,6 +19,16 @@ import serial
 
 sys.path.append('./pclogging')
 sys.path.append('./util')
+
+sys.path.append('/home/pi/ProjectCuracao/main/config')
+
+# if conflocal.py is not found, import default conf.py
+
+# Check for user imports
+try:
+	import conflocal as conf
+except ImportError:
+	import conf
 
 
 import util
@@ -146,7 +148,7 @@ def  environdatacollect(source, delay):
 		print "Good RD Response"
 	else:
 		print "bad response from RD"
-		pclogging.log(ERROR, __name__, "RD failed from Pi to BatteryWatchDog")
+		pclogging.log(pclogging.ERROR, __name__, "RD failed from Pi to BatteryWatchDog")
                 ser.close()
 		return
 	# Read the value
@@ -167,7 +169,7 @@ def  environdatacollect(source, delay):
 		print "bad response from GTH"
 		# system setup
 
-		pclogging.log(ERROR, __name__, "GTH failed from Pi to BatteryWatchDog")
+		pclogging.log(pclogging.ERROR, __name__, "GTH failed from Pi to BatteryWatchDog")
 
 		# say goodby  
         	response = util.sendCommandAndRecieve(ser, "GB")
@@ -215,7 +217,7 @@ def  environdatacollect(source, delay):
 
 	try:
 		print("trying database")
-    		con = mdb.connect('localhost', 'root', 'bleh0101', 'ProjectCuracao');
+    		con = mdb.connect('localhost', 'root', conf.databasePassword, 'ProjectCuracao');
 
     		cur = con.cursor()
 		print "before query"

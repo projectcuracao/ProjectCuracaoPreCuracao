@@ -1,3 +1,4 @@
+conflocal.py
 *.pyc
 tx*
 .*.swp
