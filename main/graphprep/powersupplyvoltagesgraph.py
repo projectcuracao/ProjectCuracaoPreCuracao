@@ -97,8 +97,8 @@ def  powersystemsupplyvoltagegraph(source,days,delay):
 
                 pylab.axis([min(t), max(t), 0.0, 7.0])
 
-		#pylab.title(("System Voltages Last %i Days" % days),ha='right')
-		pylab.figtext(.5, .05, ("System Voltages Last %i Days" % days),fontsize=18,ha='center')
+		#pylab.title(("Pi System Voltages Last %i Days" % days),ha='right')
+		pylab.figtext(.5, .05, ("Pi System Voltages Last %i Days" % days),fontsize=18,ha='center')
 
 		pylab.grid(True)
 

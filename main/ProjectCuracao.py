@@ -28,6 +28,8 @@ sys.path.append('./housekeeping')
 sys.path.append('./pclogging')
 sys.path.append('./actions')
 sys.path.append('./util')
+sys.path.append('./alarmchecks')
+sys.path.append('./state')
 
 import powerdatacollect
 import powersupplygraph
@@ -46,6 +48,12 @@ import useCamera
 import pclogging
 import util
 import sendPictureEmail
+import recieveInterruptFromBW 
+import sendWatchDogTimer
+
+import globalvars
+
+
 
 # if conflocal.py is not found, import default conf.py
 
@@ -56,26 +64,74 @@ except ImportError:
 	import conf
 
 
+# interrupt Handler
+
+def handleInterrupt(reason):
+
+	if (reason == globalvars.NOINTERRUPT):
+		return
+
+	if (reason == globalvars.NOREASON):
+		return
+
+	if (reason == globalvars.SHUTDOWN):
+    		pclogging.log(pclogging.CRITICAL, __name__, "Project Curacao Pi Shutdown")
+		util.shutdownPi()
+		return
+
+	if (reason == globalvars.GETLOG):
+    		pclogging.log(pclogging.INFO, __name__, "Fetch Battery Watchdog Log ")
+		return
+
+	if (reason == globalvars.ALARM1):
+    		pclogging.log(pclogging.INFO, __name__, "Battery Watchdog Alarm 1")
+		return
+
+	if (reason == globalvars.ALARM2):
+    		pclogging.log(pclogging.INFO, __name__, "Battery Watchdog Alarm 2")
+		return
+
+	if (reason == globalvars.ALARM3):
+    		pclogging.log(pclogging.INFO, __name__, "Battery Watchdog Alarm 3")
+		return
+
+	if (reason == globalvars.REBOOT):
+    		pclogging.log(pclogging.CRITICAL, __name__, "Project Curacao Pi Reboot")
+		util.rebootPi()
+		return
+
+
+
+
+# interrupt callback
+def arduino_callback(channel):
+    global hasBWInterrupted
+    print('Edge detected on channel %s'%channel)
+    hasBWInterrupted = True
+    print("hasBWSet-2=", hasBWInterrupted)
+
+
 if __name__ == '__main__':
 
-    CRITICAL=50
-    ERROR=40
-    WARNING=30
-    INFO=20
-    DEBUG=10
-    NOTSET=0
 
     # system setup
     
     # log system startup
  
-    pclogging.log(pclogging.CRITICAL, __name__, "Project Curacao Startup")
-    util.sendEmail("test", "ProjectCuracao Pi Bootup", "The Raspberry Pi has rebooted.", conf.notifyAddress,  conf.fromAddress, "");
+    pclogging.log(pclogging.INFO, __name__, "Project Curacao Startup")
+    util.sendEmail("test", "ProjectCuracao Pi Startup", "The Raspberry Pi has rebooted.", conf.notifyAddress,  conf.fromAddress, "");
+    GPIO.setwarnings(False)
     GPIO.setmode(GPIO.BOARD)	
     GPIO.setup(7, GPIO.OUT, pull_up_down=GPIO.PUD_DOWN)
     # set initial hardware actions 
     hardwareactions.setfan(False)
 
+    # arudino interrupt - from battery watchdog
+    hasBWInterrupted = False  # interrupt state variable
+    #GPIO.setup(11, GPIO.IN )
+    GPIO.setup(11, GPIO.IN, pull_up_down=GPIO.PUD_DOWN)
+    #GPIO.add_event_detect(11, GPIO.RISING, callback=arduino_callback)  # add rising edge detection on a channel
+    #GPIO.add_event_detect(11, GPIO.RISING)  # add rising edge detection on a channel
 
 
 
@@ -86,6 +142,7 @@ if __name__ == '__main__':
     job = scheduler.add_cron_job(watchdogdatacollect.watchdogdatacollect, minute="*/5", args=['main', 15])    
     job = scheduler.add_cron_job(environdatacollect.environdatacollect, minute="*/15", args=['main', 5])    
     job = scheduler.add_cron_job(systemstatistics.systemstatistics15minutes, minute="*/15", args=['main', 10])    
+    #job = scheduler.add_cron_job(sendWatchDogTimer.sendWatchDogTimer, minute="*/5", args=['main', 20])    
 
 
 
@@ -114,8 +171,33 @@ if __name__ == '__main__':
 
     while True:
         sys.stdout.write('.'); sys.stdout.flush()
-	time.sleep(30)
- 
- 
+	myDateString = time.strftime("%Y-%m-%d", time.gmtime())
+	myTimeString = time.strftime("%H:%M:%S", time.gmtime())
+	print "-%s %s-" % (myDateString, myTimeString)
 
+	print ("hasBW=", hasBWInterrupted)
+	# respond to interrupt
+	#if (hasBWInterrupted == True):
+	#if ((GPIO.event_detected(11) == True) or (hasBWInterrupted == True)):
+	if ((GPIO.input(11) == True) or (hasBWInterrupted == True)):
+		# The routine will be executed now 
+		hasBWInterrupted = True;
+		result = recieveInterruptFromBW.recieveInterruptFromBW("test", 1)	
+		print("result=", result);
+		if (result > globalvars.FAILED):
+			hasBWInterrupted = False
+			#interrupt handled
+			sys.stdout.write("BW Interrupt Handled\n")
+        		sys.stdout.flush()
+
+			# now do the interrupt reason
+			handleInterrupt(result)
+
+		
+	if (hasBWInterrupted == True):
+		time.sleep(15)
+	else:
+		time.sleep(30)
+ 
+ 
 

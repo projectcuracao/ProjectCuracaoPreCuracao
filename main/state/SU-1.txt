@@ -1,1 +1,1 @@
-alarm 1, Reason1-1,NO, 1005, 1, 10
+Battery Low,Pi Low,YES, 1005, 1, 10

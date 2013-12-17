@@ -1,1 +1,1 @@
-alarm 2, Reason2-1,YES, 1005, 1, 10
+Timeouts, Arduino 5,NO, 1005, 1, 10

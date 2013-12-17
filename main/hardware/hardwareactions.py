@@ -19,14 +19,18 @@ def setfan(value):
 	if (value == True):
  	      GPIO.setup(18, GPIO.OUT)
               GPIO.output(18, True)
+	      time.sleep(0.1)
+              GPIO.output(18, False)
               f = open("/home/pi/ProjectCuracao/main/state/fanstate.txt", "w")
               f.write("1")
               f.close()
               return True
 
         if (value == False):
-              GPIO.setup(18, GPIO.OUT)
-              GPIO.output(18, False)
+ 	      GPIO.setup(15, GPIO.OUT)
+              GPIO.output(15, True)
+	      time.sleep(0.1)
+              GPIO.output(15, False)
               f = open("/home/pi/ProjectCuracao/main/state/fanstate.txt", "w")
               f.write("0")
               f.close()
@@ -77,12 +81,12 @@ def openshutter():
 		print "openshutter-2 feedbackvalue =", feedbackvalue
 		# now if failed, report it 
 		if (feedbackvalue > LOWTHRESHOLD):
-			GPIO.cleanup()
+			#GPIO.cleanup()
 			return False;
 
 			
 
-	GPIO.cleanup()
+	#GPIO.cleanup()
 	return True;
 
 
@@ -110,7 +114,7 @@ def closeshutter():
 		feedbackvalue = readCameraServo()
 		print "closeshutter - 2 feedbackvalue =", feedbackvalue
 		if (feedbackvalue < HIGHTHRESHOLD):
-			GPIO.cleanup()
+			#GPIO.cleanup()
 			print "openshutter value=", readCameraServo()
 			return False
 

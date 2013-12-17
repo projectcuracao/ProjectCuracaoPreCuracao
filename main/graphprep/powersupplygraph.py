@@ -109,8 +109,8 @@ def  powersystemsupplygraph(source,days,delay):
 		else:
 			myMax = max(s)
 		pylab.axis([min(t), max(t), min(u), myMax])
-		#pylab.title(("System Power Last %i Days" % days),ha='right')
-		pylab.figtext(.5, .05, ("System Power Last %i Days" % days),fontsize=18,ha='center')
+		#pylab.title(("Pi System Power Last %i Days" % days),ha='right')
+		pylab.figtext(.5, .05, ("Pi System Power Last %i Days" % days),fontsize=18,ha='center')
 
 		pylab.grid(True)
 

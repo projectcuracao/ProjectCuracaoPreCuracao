@@ -6,8 +6,12 @@
 #
 import time
 import sys
+import os
 
 sys.path.append('/home/pi/ProjectCuracao/main/config')
+sys.path.append('/home/pi/ProjectCuracao/main/hardware')
+
+import hardwareactions
 
 def  sendCommandAndRecieve(ser,command):
 
@@ -121,19 +125,37 @@ def sendEmail(source, message, subject, toaddress, fromaddress, filename):
 
 	# Send the email via our own SMTP server.
 
-	# open up a line with the server
-	s = smtplib.SMTP("smtp.gmail.com", 587)
-	s.ehlo()
-	s.starttls()
-	s.ehlo()
+	try:
+		# open up a line with the server
+		s = smtplib.SMTP("smtp.gmail.com", 587)
+		s.ehlo()
+		s.starttls()
+		s.ehlo()
 
-	# login, send email, logout
-	s.login(conf.mailUser, conf.mailPassword)
-	s.sendmail(conf.mailUser, toaddress, msg.as_string())
-	#s.close()
+		# login, send email, logout
+		s.login(conf.mailUser, conf.mailPassword)
+		s.sendmail(conf.mailUser, toaddress, msg.as_string())
+		#s.close()
 
 
-	s.quit()
+		s.quit()
 
+	except:
+		
+		print("sendmail exception raised")
 	return 0
+
+
+
+def rebootPi():
+   # shut the shutter on camera
+   hardwareactions.closeshutter();
+   sys.stdout.flush()
+   os.system("sudo reboot")
+
+def shutdownPi():
+   # shut the shutter on camera
+   hardwareactions.closeshutter();
+   sys.stdout.flush()
+   os.system("sudo shutdown -h now")
 

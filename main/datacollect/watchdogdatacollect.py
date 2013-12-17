@@ -14,8 +14,10 @@ import serial
 import MySQLdb as mdb
 sys.path.append('./pclogging')
 sys.path.append('./util')
+sys.path.append('./housekeeping')
 import pclogging
 import util
+import sendWatchDogTimer
 
 sys.path.append('/home/pi/ProjectCuracao/main/config')
 
@@ -62,10 +64,10 @@ def  watchdogdatacollect(source, delay):
 	GPIO.output(7, False)
 	
 
-	# Send the GD (Get Data) Command
 	ser = serial.Serial('/dev/ttyAMA0', 9600, timeout=1)
 	ser.open()
 	time.sleep(7.0)
+
 
 	# send the first "are you there? command - RD - return from Arduino OK"
 		
@@ -80,7 +82,10 @@ def  watchdogdatacollect(source, delay):
                 ser.close()
 		return
 	# Read the value
+	# send the watchdog timer first
+	sendWatchDogTimer.sendWatchDogTimer("watchdogdatacollect", 0,ser)
 
+	# Send the GD (Get Data) Command
         response = util.sendCommandAndRecieve(ser, "GD")
 	print("response=", response);
 	
