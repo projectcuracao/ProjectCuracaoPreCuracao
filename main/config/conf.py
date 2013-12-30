@@ -38,4 +38,4 @@ PI_MIDNIGHT_WAKEUP_SECONDS_LENGTH = 3600.0   # one hour
 
 PI_MIDNIGHT_WAKEUP_THRESHOLD = 3.971   # 60%
 
-
+enableShutdowns = 1 

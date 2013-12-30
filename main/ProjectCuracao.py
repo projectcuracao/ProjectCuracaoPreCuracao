@@ -139,10 +139,9 @@ if __name__ == '__main__':
     
 
     job = scheduler.add_cron_job(powerdatacollect.datacollect5minutes, minute="*/5", args=['main', 0])    
-    job = scheduler.add_cron_job(watchdogdatacollect.watchdogdatacollect, minute="*/5", args=['main', 15])    
-    job = scheduler.add_cron_job(environdatacollect.environdatacollect, minute="*/15", args=['main', 5])    
-    job = scheduler.add_cron_job(systemstatistics.systemstatistics15minutes, minute="*/15", args=['main', 10])    
-    #job = scheduler.add_cron_job(sendWatchDogTimer.sendWatchDogTimer, minute="*/5", args=['main', 20])    
+    job = scheduler.add_cron_job(watchdogdatacollect.watchdogdatacollect, minute="*/5", args=['main', 30])    
+    job = scheduler.add_cron_job(environdatacollect.environdatacollect, minute="*/15", args=['main', 10])    
+    job = scheduler.add_cron_job(systemstatistics.systemstatistics15minutes, minute="*/15", args=['main', 20])    
 
 
 

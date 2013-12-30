@@ -85,6 +85,8 @@ def  watchdogdatacollect(source, delay):
 	# send the watchdog timer first
 	sendWatchDogTimer.sendWatchDogTimer("watchdogdatacollect", 0,ser)
 
+
+	
 	# Send the GD (Get Data) Command
         response = util.sendCommandAndRecieve(ser, "GD")
 	print("response=", response);
@@ -135,6 +137,79 @@ def  watchdogdatacollect(source, delay):
 		else:	
         		powerEfficiency = (ArInputCurrent*ArInputVoltage/(SolarCellCurrent*SolarCellVoltage+BatteryCurrent*BatteryVoltage+5.0*500.0))*100
 
+
+	# get the unread log from the Arduino
+        response = util.sendCommandAndRecieve(ser, "SL")
+	print("response=", response)
+	
+	try:
+		countEntry  = int(response)
+	except ValueError:
+	    	countEntry = 0
+
+
+	if (countEntry > 0):
+		# read all unread entries
+		for i in range(countEntry):
+			logEntry = util.recieveLine(ser)
+			print("recievedLogEntry =", logEntry)
+			# parse and then stuff in log database
+			# stuff the values into variables
+			splitList = logEntry.split(',')
+			print(splitList)	
+
+			if (len(splitList) == 4):
+				ArduinoTime = splitList[0]
+				ArduinoLevel = int(splitList[1])
+				ArduinoData0 = int(splitList[2])
+				ArduinoData1 = splitList[3]
+				# now we have the data, stuff it in the database
+				entryValue = util.convertArduinoEntry01ToText(ArduinoData0, ArduinoData1)
+			
+				if (ArduinoData0 == 9):
+					# LOGAlarmTriggered
+					entryValue = util.convertAlarmToText(int(ArduinoData1))
+
+				try:
+					print("trying database")
+    					con = mdb.connect('localhost', 'root', conf.databasePassword, 'ProjectCuracao');
+	
+    					cur = con.cursor()
+					print "before query"
+	
+                			query = "INSERT INTO systemlog(TimeStamp, Level, Source, Message) VALUES('%s', '%s', '%s', '%s')" % (ArduinoTime, ArduinoLevel,  'Ardinuo BatteryWatchDog', entryValue)
+					print("query=%s" % query)
+	
+					cur.execute(query)
+			
+					con.commit()
+			
+				except mdb.Error, e:
+ 	 
+    					print "Error %d: %s" % (e.args[0],e.args[1])
+    					con.rollback()
+    					#sys.exit(1)
+    
+				finally:    
+       					cur.close() 
+        				con.close()
+	
+					del cur
+					del con
+
+			else:
+				print "bad response from SL"
+				# system setup
+	
+				pclogging.log(pclogging.ERROR, __name__, "SL failed from Pi to BatteryWatchDog")
+	
+				# say goodby  
+        			response = util.sendCommandAndRecieve(ser, "GB")
+				print("response=", response);
+				ser.close()
+				return
+	
+	print("ArInputCurrent =", ArInputCurrent)
 
 
 	# say goodby  

@@ -1,10 +1,10 @@
 
 
 """
-testWatchdogDataCollect.py
-JCS 10/22/2013 Version 1.0
+testWatchDogTimer.py
+JCS 11/28/2013 Version 1.0
 
-This program runs the data collection from the watchdog
+This program tests the watchdog reset 
 """
 
 # shelves:
@@ -27,11 +27,11 @@ sys.path.append('./datacollect')
 sys.path.append('./graphprep')
 sys.path.append('./hardware')
 sys.path.append('./housekeeping')
+sys.path.append('./alarmchecks')
 
-import watchdogdatacollect 
+import sendWatchDogTimer  
 
 
-#while True:
-watchdogdatacollect.watchdogdatacollect("test", 1)
-#time.sleep(15.0)
+sendWatchDogTimer.sendWatchDogTimer("test", 1)
+
 

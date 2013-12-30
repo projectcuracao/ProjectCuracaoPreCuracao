@@ -10,8 +10,74 @@ import os
 
 sys.path.append('/home/pi/ProjectCuracao/main/config')
 sys.path.append('/home/pi/ProjectCuracao/main/hardware')
-
+sys.path.append('/home/pi/ProjectCuracao/main/util')
+sys.path.append('/home/pi/ProjectCuracao/main/pclogging')
+import util
 import hardwareactions
+import pclogging
+
+def convertAlarmToText(alarm):
+
+	alarmName = str(alarm)
+	if (alarm == 0):
+		alarmName = "PiShutdown"
+	if (alarm == 1):
+		alarmName = "PiStartup"
+	if (alarm == 2):
+		alarmName = "PiMidnightStartup"
+	if (alarm == 3):
+		alarmName = "PiMidnightShutdown"
+	return alarmName
+
+
+def convertLogLevelToText(level):
+
+	levelName = str(level)	
+	if (level == pclogging.DEBUG):
+		levelName = "DEBUG"
+	if (level == pclogging.INFO):
+		levelName = "INFO"
+	if (level == pclogging.WARNING):
+		levelName = "WARNING"
+	if (level == pclogging.ERROR):
+		levelName = "ERROR"
+	if (level == pclogging.CRITICAL):
+		levelName = "CRITICAL"
+
+	return levelName
+
+def convertArduinoEntry01ToText(entry0,entry1):
+
+	entryName = "UNKNOWN %i %s " % (entry0, entry1)
+	if (entry0 == 0):
+		entryName ="LOGNoEvent"
+	if (entry0 == 1):
+		entryName ="LOGPiShutdown"
+	if (entry0 == 2):
+		entryName ="LOGPiStartup"
+	if (entry0 == 3):
+		entryName ="LOGPiOff"
+	if (entry0 == 4):
+		entryName ="LOGPiOn"
+	if (entry0 == 5):
+		# LOGPiPower has voltage as entryData1
+		entryName ="LOGPiPower: %s" % entry1
+	if (entry0 == 6):
+		# LOGPiInterrupt has reason as entryData1
+		entryName ="LOGPiInterrupt: %s" % entry1
+	if (entry0 == 7):
+		entryName ="LOGThresholdsSet"
+	if (entry0 == 8):
+		# LOGSensorFail has sensor # (i2c address) as entryData1
+		entryName ="LOGSensorFail: %s" % entry1
+	if (entry0 == 9):
+		# LOGAlarmTriggered has alarm # (as in the check alarm routine) as entryData1
+		entryName ="LOGAlarmTriggered: %s" % entry1
+	if (entry0 == 10):
+		entryName ="LOGDeadManSwitchTriggered"
+	if (entry0 == 11):
+		entryName ="LOGArduinoReboot"
+	return entryName	
 
 def  sendCommandAndRecieve(ser,command):
 
@@ -20,6 +86,25 @@ def  sendCommandAndRecieve(ser,command):
      print("sending command=",command)
      ser.write(command+'\n') 
      # wait no more than 10 seconds
+     t = 10
+                
+     st = ''
+     initTime = time.time()
+     while True:
+               st +=  ser.readline()
+	       print("right after readline.  st=",st)
+	       if (len(st) > 0):
+			break;
+	       print("after readline.  st=",st)
+               if timeout and (time.time() - initTime > t) :
+                    break
+
+
+     return st	
+
+def  recieveLine(ser):
+
+     timeout = True
      t = 10
                 
      st = ''
