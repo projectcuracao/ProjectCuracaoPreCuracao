@@ -77,7 +77,26 @@ def convertArduinoEntry01ToText(entry0,entry1):
 		entryName ="LOGDeadManSwitchTriggered"
 	if (entry0 == 11):
 		entryName ="LOGArduinoReboot"
+	if (entry0 == 12):
+		entryName ="LOGWatchDogTriggered"
+	if (entry0 == 13):
+		# LOGAlarmTriggered has alarm # (as in the check alarm routine) as entryData1
+		entryName ="LOGAlarmDisabled: %s" % entry1
+	if (entry0 == 14):
+		entryName ="LOGPiOnOverruledUnderVoltage"
+	if (entry0 == 15):
+		entryName ="LOGPiOffLowVoltage"
+	if (entry0 == 16):
+		entryName ="LOGPiOnLowVoltageRecovery"
+	if (entry0 == 17):
+		entryName ="LOGSolarSelect"
+	if (entry0 == 18):
+		entryName ="LOGWindSelect"
+	if (entry0 == 19):
+		entryName ="LOGVoltageCancelledRecovery"
 	return entryName	
+
+
 
 def  sendCommandAndRecieve(ser,command):
 

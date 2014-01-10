@@ -37,5 +37,8 @@ try:
 except ImportError:
 	import conf
 
+print("conf.notifyAddress", conf.notifyAddress)
+print("conf.fromAddress", conf.fromAddress)
+
 util.sendEmail("test", "hello from ProjectCuracao", "Test from Pi", conf.notifyAddress, conf.fromAddress, "/home/pi/RasPiConnectServer/static/picamera.jpg");
 

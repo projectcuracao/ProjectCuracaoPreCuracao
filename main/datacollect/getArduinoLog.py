@@ -1,8 +1,8 @@
-# Battery Watchdog Data collection events
-# filename: watchdogdatacollect.py
-# Version 1.3 09/10/13
+# Get Arduino Log 
+# filename: getArduinoLog.py
+# Version 1.3 01/05/14
 #
-# contains event routines for data collection from the battery watchdog arduino
+# get logs from Arduino 
 #
 #
 
@@ -17,7 +17,6 @@ sys.path.append('./util')
 sys.path.append('./housekeeping')
 import pclogging
 import util
-import sendWatchDogTimer
 
 sys.path.append('/home/pi/ProjectCuracao/main/config')
 
@@ -31,7 +30,7 @@ except ImportError:
 
 
 
-def  watchdogdatacollect(source, delay):
+def  getArduinoLog(source, delay):
 
 	print("watchdogdatacollect source:%s" % source)
 
@@ -84,64 +83,6 @@ def  watchdogdatacollect(source, delay):
 	# Read the value
 	# send the watchdog timer first
 	sendWatchDogTimer.sendWatchDogTimer("watchdogdatacollect", 0,ser)
-
-
-	
-	# Send the GD (Get Data) Command
-        response = util.sendCommandAndRecieve(ser, "GD")
-	print("response=", response);
-	
-
-
-	# stuff the values into variables
-	splitList = response.split(',')
-	print(splitList)	
-
-	for item in range(len(splitList)):
-		splitList[item] = splitList[item].replace('NAN', "0.0")
-	print(splitList)	
-
-	if (len(splitList) == 13):
-		ArInputVoltage = float(splitList[0])
-        	ArInputCurrent = float(splitList[1])
-		SolarCellVoltage = float(splitList[2])
-		SolarCellCurrent = float(splitList[3])
-		BatteryVoltage = float(splitList[4])
-		BatteryCurrent = float(splitList[5])
-		OutsideHumidity = float(splitList[6])
-		OutsideTemperature = float(splitList[7])
-		LastReboot = splitList[8]
-		BatteryTemperature = float(splitList[9])
-		FreeMemory = float(splitList[10])
-		UnregulatedWindVoltage = float(splitList[11])
-		RegulatedWindVoltage = float(splitList[12])
-	else:
-		print "bad response from GD"
-		# system setup
-
-		pclogging.log(pclogging.ERROR, __name__, "GD failed from Pi to BatteryWatchDog")
-
-		# say goodby  
-        	response = util.sendCommandAndRecieve(ser, "GB")
-		print("response=", response);
-		ser.close()
-		return
-	
-	print("ArInputCurrent =", ArInputCurrent)
-
-     	# power efficiency
-	if ( (SolarCellCurrent*SolarCellVoltage+BatteryCurrent*BatteryVoltage) == 0):
-       		powerEfficiency = 10000.0; 
-	else:
-		powerEfficiency = (ArInputCurrent*ArInputVoltage/(SolarCellCurrent*SolarCellVoltage+BatteryCurrent*BatteryVoltage))*100
-
-
-        # if power Efficiency < 0, then must be plugged in so add 500ma @ 5V
-        if (powerEfficiency < 0.0):
-		if ((SolarCellCurrent*SolarCellVoltage+BatteryCurrent*BatteryVoltage+5.0*500.0) == 0.0):
-			powerEfficiency = 10000.0;
-		else:	
-        		powerEfficiency = (ArInputCurrent*ArInputVoltage/(SolarCellCurrent*SolarCellVoltage+BatteryCurrent*BatteryVoltage+5.0*500.0))*100
 
 
 	# get the unread log from the Arduino
@@ -215,40 +156,9 @@ def  watchdogdatacollect(source, delay):
 				ser.close()
 				return
 	
-	print("ArInputCurrent =", ArInputCurrent)
-
 
 	# say goodby  
         response = util.sendCommandAndRecieve(ser, "GB")
 	print("response=", response);
 
 	ser.close()
-		
-	# now we have the data, stuff it in the database
-
-	try:
-		print("trying database")
-    		con = mdb.connect('localhost', 'root', conf.databasePassword, 'ProjectCuracao');
-
-    		cur = con.cursor()
-		print "before query"
-
-		query = 'INSERT INTO batterywatchdogdata(TimeStamp, ArInputCurrent, ArInputVoltage, BatteryOutputCurrent, BatteryOutputVoltage, SolarOutputCurrent, SolarOutputVoltage, BatteryTemperature, PowerEfficiency, LastReboot, OutsideTemperature, OutsideHumidity, FreeMemory, UnregulatedWindVoltage, RegulatedWindVoltage) VALUES(UTC_TIMESTAMP(), %.3f, %.3f, %.3f, %.3f, %.3f, %.3f, %.3f,%.3f,%s, %.3f, %.3f, %i, %.3f, %.3f)' % (ArInputCurrent, ArInputVoltage, BatteryCurrent, BatteryVoltage, SolarCellCurrent, SolarCellVoltage, BatteryTemperature, powerEfficiency, LastReboot, OutsideTemperature, OutsideHumidity, FreeMemory, UnregulatedWindVoltage, RegulatedWindVoltage) 
-		print("query=%s" % query)
-
-		cur.execute(query)
-	
-		con.commit()
-		
-	except mdb.Error, e:
-  
-    		print "Error %d: %s" % (e.args[0],e.args[1])
-    		con.rollback()
-    		#sys.exit(1)
-    
-	finally:    
-       		cur.close() 
-        	con.close()
-
-		del cur
-		del con
