@@ -1,6 +1,6 @@
 # Battery Watchdog Data collection events
 # filename: watchdogdatacollect.py
-# Version 1.3 09/10/13
+# Version 1.5 01/10/14
 #
 # contains event routines for data collection from the battery watchdog arduino
 #
@@ -101,7 +101,7 @@ def  watchdogdatacollect(source, delay):
 		splitList[item] = splitList[item].replace('NAN', "0.0")
 	print(splitList)	
 
-	if (len(splitList) == 13):
+	if (len(splitList) == 14):
 		ArInputVoltage = float(splitList[0])
         	ArInputCurrent = float(splitList[1])
 		SolarCellVoltage = float(splitList[2])
@@ -115,6 +115,7 @@ def  watchdogdatacollect(source, delay):
 		FreeMemory = float(splitList[10])
 		UnregulatedWindVoltage = float(splitList[11])
 		RegulatedWindVoltage = float(splitList[12])
+		SolarWind = int(splitList[13])
 	else:
 		print "bad response from GD"
 		# system setup
@@ -233,7 +234,7 @@ def  watchdogdatacollect(source, delay):
     		cur = con.cursor()
 		print "before query"
 
-		query = 'INSERT INTO batterywatchdogdata(TimeStamp, ArInputCurrent, ArInputVoltage, BatteryOutputCurrent, BatteryOutputVoltage, SolarOutputCurrent, SolarOutputVoltage, BatteryTemperature, PowerEfficiency, LastReboot, OutsideTemperature, OutsideHumidity, FreeMemory, UnregulatedWindVoltage, RegulatedWindVoltage) VALUES(UTC_TIMESTAMP(), %.3f, %.3f, %.3f, %.3f, %.3f, %.3f, %.3f,%.3f,%s, %.3f, %.3f, %i, %.3f, %.3f)' % (ArInputCurrent, ArInputVoltage, BatteryCurrent, BatteryVoltage, SolarCellCurrent, SolarCellVoltage, BatteryTemperature, powerEfficiency, LastReboot, OutsideTemperature, OutsideHumidity, FreeMemory, UnregulatedWindVoltage, RegulatedWindVoltage) 
+		query = 'INSERT INTO batterywatchdogdata(TimeStamp, ArInputCurrent, ArInputVoltage, BatteryOutputCurrent, BatteryOutputVoltage, SolarOutputCurrent, SolarOutputVoltage, BatteryTemperature, PowerEfficiency, LastReboot, OutsideTemperature, OutsideHumidity, FreeMemory, UnregulatedWindVoltage, RegulatedWindVoltage, SolarWind) VALUES(UTC_TIMESTAMP(), %.3f, %.3f, %.3f, %.3f, %.3f, %.3f, %.3f,%.3f,%s, %.3f, %.3f, %i, %.3f, %.3f, %i)' % (ArInputCurrent, ArInputVoltage, BatteryCurrent, BatteryVoltage, SolarCellCurrent, SolarCellVoltage, BatteryTemperature, powerEfficiency, LastReboot, OutsideTemperature, OutsideHumidity, FreeMemory, UnregulatedWindVoltage, RegulatedWindVoltage, SolarWind) 
 		print("query=%s" % query)
 
 		cur.execute(query)

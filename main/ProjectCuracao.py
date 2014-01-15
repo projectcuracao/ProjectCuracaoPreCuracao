@@ -34,6 +34,7 @@ sys.path.append('./state')
 import powerdatacollect
 import powersupplygraph
 import systemstatusgraph
+import solarwindgraph
 import environmentalgraph
 import environmentalgraph2
 import batterywatchdogcurrentgraph 
@@ -155,6 +156,7 @@ if __name__ == '__main__':
 
     job = scheduler.add_cron_job(batterywatchdogcurrentgraph.batterywatchdogcurrentgraph, minute="*/15", args=['main',5,360])    
     job = scheduler.add_cron_job(batterywatchdogvoltagegraph.batterywatchdogvoltagegraph, minute="*/15", args=['main',5,720])    
+    job = scheduler.add_cron_job(solarwindgraph.solarwindgraph, minute="*/15", args=['main',5,780])    
 
 
     # camera 
