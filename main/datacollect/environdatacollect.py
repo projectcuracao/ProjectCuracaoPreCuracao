@@ -88,8 +88,28 @@ def  environdatacollect(source, delay):
 
 	# Inside Humidity
 
+        Oldinsidehumidity = -1000.0 # bad data
         insidehumidity = -1000.0 # bad data
         try:
+                maxCount = 20
+                count = 0
+                while (count < maxCount):
+                    output = subprocess.check_output(["/home/pi/ProjectCuracao/main/hardware/Adafruit_DHT_MOD", "22", "23"]);
+                    print "count=", count
+                    print output
+                    # search for humidity printout
+                    matches = re.search("Hum =\s+([0-9.]+)", output)
+
+                    if (not matches):
+                          count = count + 1
+                          time.sleep(3.0)
+                          continue
+                    Oldinsidehumidity = float(matches.group(1))
+                    count = maxCount
+
+		# now do it again.  Throw out the higher value (get rid of high spikes)	
+
+		time.sleep(1.0)
                 maxCount = 20
                 count = 0
                 while (count < maxCount):
@@ -106,7 +126,8 @@ def  environdatacollect(source, delay):
                     insidehumidity = float(matches.group(1))
                     count = maxCount
 
-
+		    if (Oldinsidehumidity < insidehumidity):
+		 	  insidehumidity = Oldinsidehumidity
 
         except IOError as e:
                  print "I/O error({0}): {1}".format(e.errno, e.strerror)

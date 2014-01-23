@@ -2,8 +2,11 @@ This directory holds the Project Curacao files for the raspberry Pi
 
 please address any comments to projectcuracaopi@gmail.com
 
-Version 0.3 12/17/2013
+Version 1.2RC 01/22/14
 
+First release candidate of Project Curacao Software
+
+Version 0.3 12/17/2013
 12/17/2013 Commit: more modifications and updates for the Battery Watchdog Arduino Interface.  Improved Logging 
 11/04/2013 Commit: more modifications and additions to local.py for new devices and Arduino Interface
 

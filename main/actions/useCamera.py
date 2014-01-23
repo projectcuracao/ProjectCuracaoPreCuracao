@@ -47,7 +47,7 @@ def  sweepShutter(source, delay):
 def  takePicture(source):
 	# take picture
 	print "taking picture"
-	output = subprocess.check_output ("raspistill -o /home/pi/RasPiConnectServer/static/picameraraw.jpg -t 0",shell=True, stderr=subprocess.STDOUT )
+	output = subprocess.check_output ("raspistill -o /home/pi/RasPiConnectServer/static/picameraraw.jpg -t 750",shell=True, stderr=subprocess.STDOUT )
 	output = subprocess.check_output("convert '/home/pi/RasPiConnectServer/static/picameraraw.jpg' -pointsize 72 -fill white -gravity SouthWest -annotate +50+100 'ProjectCuracao %[exif:DateTimeOriginal]' '/home/pi/RasPiConnectServer/static/picamera.jpg'", shell=True, stderr=subprocess.STDOUT)
 
 	pclogging.log(pclogging.INFO, __name__, source )

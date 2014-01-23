@@ -76,6 +76,11 @@ def  solarwindgraph(source,days,delay):
 		
 		print ("count of t=",len(t))
 
+		# scale array for Solar =0 Wind = 1
+
+		for i in range(len(v)):
+			v[i] = v[i] * 10
+
 		#dts = map(datetime.datetime.fromtimestamp, t)
 		#print dts
 		fds = dates.date2num(t) # converted
