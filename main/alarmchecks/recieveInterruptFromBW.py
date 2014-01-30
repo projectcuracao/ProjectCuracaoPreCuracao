@@ -56,6 +56,9 @@ def returnNameFromInterrupt(interrupt):
 	if (interrupt == 7):
 		return "REBOOT"
 
+	if (interrupt == 101):
+		return "BAD INTERRUPT"
+
 	return "UNKNOWNINTERRUPT"
 		
 
@@ -115,11 +118,16 @@ def  recieveInterruptFromBW(source, delay):
         response = util.sendCommandAndRecieve(ser, "WA")
 	print("response=", response);
 	
-	AWAState = 100; #UNKNOWNINTERRUPT
+	AWAState = 100 #UNKNOWNINTERRUPT
+	AWAState = 101 #BAD INTERRUPT
 
 	if (len(response) > 0):
 
-		AWAState = int(response);
+		try:
+			AWAState = int(response)
+		except:
+		       	AWAState = 101 
+			
 		pclogging.log(pclogging.INFO, __name__, "Recieved Interrupt %s from BatteryWatchDog to Pi" % returnNameFromInterrupt(AWAState))
 	else:
 		# system setup

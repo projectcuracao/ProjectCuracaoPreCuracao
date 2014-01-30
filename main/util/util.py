@@ -20,13 +20,19 @@ def convertAlarmToText(alarm):
 
 	alarmName = str(alarm)
 	if (alarm == 0):
-		alarmName = "PiShutdown"
+		alarmName = "AlarmPiShutdown"
 	if (alarm == 1):
-		alarmName = "PiStartup"
+		alarmName = "AlarmPiStartup"
 	if (alarm == 2):
-		alarmName = "PiMidnightStartup"
+		alarmName = "AlarmPiMidnightStartup"
 	if (alarm == 3):
-		alarmName = "PiMidnightShutdown"
+		alarmName = "AlarmPiMidnightShutdown"
+	if (alarm == 4):
+		alarmName = "AlarmPiVoltageShutdown"
+	if (alarm == 5):
+		alarmName = "AlarmPiSunset"
+	if (alarm == 6):
+		alarmName = "AlarmPiSunrise"
 	return alarmName
 
 
@@ -72,7 +78,9 @@ def convertArduinoEntry01ToText(entry0,entry1):
 		entryName ="LOGSensorFail: %s" % entry1
 	if (entry0 == 9):
 		# LOGAlarmTriggered has alarm # (as in the check alarm routine) as entryData1
-		entryName ="LOGAlarmTriggered: %s" % entry1
+		entryAlarm = util.convertAlarmToText(entry1)
+
+		entryName ="LOGAlarmTriggered: %s" % entryAlarm
 	if (entry0 == 10):
 		entryName ="LOGDeadManSwitchTriggered"
 	if (entry0 == 11):

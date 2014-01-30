@@ -44,6 +44,7 @@ import powersupplyvoltagesgraph
 import environdatacollect
 import watchdogdatacollect
 
+import doallgraphs
 import hardwareactions
 import useCamera
 import pclogging
@@ -146,17 +147,21 @@ if __name__ == '__main__':
 
 
 
-    job = scheduler.add_cron_job(powersupplygraph.powersystemsupplygraph, minute="*/15", args=['main',5,60])    
-    job = scheduler.add_cron_job(powersupplyvoltagesgraph.powersystemsupplyvoltagegraph, minute="*/15", args=['main',5, 120])    
+    #job = scheduler.add_cron_job(powersupplygraph.powersystemsupplygraph, minute="*/15", args=['main',5,60])    
+    #job = scheduler.add_cron_job(powersupplyvoltagesgraph.powersystemsupplyvoltagegraph, minute="*/15", args=['main',5, 120])    
 
-    job = scheduler.add_cron_job(systemstatusgraph.systemstatusgraph, minute="*/15", args=['main',5,180])    
+    #job = scheduler.add_cron_job(systemstatusgraph.systemstatusgraph, minute="*/15", args=['main',5,180])    
     
-    job = scheduler.add_cron_job(environmentalgraph.environmentalgraph, minute="*/15", args=['main',5, 240])    
-    job = scheduler.add_cron_job(environmentalgraph2.environmentalgraph2, minute="*/15", args=['main',5,300])    
+    #job = scheduler.add_cron_job(environmentalgraph.environmentalgraph, minute="*/15", args=['main',5, 240])    
+    #job = scheduler.add_cron_job(environmentalgraph2.environmentalgraph2, minute="*/15", args=['main',5,300])    
 
-    job = scheduler.add_cron_job(batterywatchdogcurrentgraph.batterywatchdogcurrentgraph, minute="*/15", args=['main',5,360])    
-    job = scheduler.add_cron_job(batterywatchdogvoltagegraph.batterywatchdogvoltagegraph, minute="*/15", args=['main',5,720])    
-    job = scheduler.add_cron_job(solarwindgraph.solarwindgraph, minute="*/15", args=['main',5,780])    
+    #job = scheduler.add_cron_job(batterywatchdogcurrentgraph.batterywatchdogcurrentgraph, minute="*/15", args=['main',5,360])    
+    #job = scheduler.add_cron_job(batterywatchdogvoltagegraph.batterywatchdogvoltagegraph, minute="*/15", args=['main',5,720])    
+    
+    #job = scheduler.add_cron_job(solarwindgraph.solarwindgraph, minute="*/15", args=['main',5,780])    
+    
+    
+    job = scheduler.add_cron_job(doallgraphs.doallgraphs, minute="*/15", args=['main',10,60])    
 
 
     # camera 

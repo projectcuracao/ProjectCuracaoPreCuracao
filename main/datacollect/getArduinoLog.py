@@ -17,6 +17,7 @@ sys.path.append('./util')
 sys.path.append('./housekeeping')
 import pclogging
 import util
+import sendWatchDogTimer
 
 sys.path.append('/home/pi/ProjectCuracao/main/config')
 
@@ -65,6 +66,8 @@ def  getArduinoLog(source, delay):
 
 	ser = serial.Serial('/dev/ttyAMA0', 9600, timeout=1)
 	ser.open()
+	ser.flushInput()
+	ser.flushOutput()
 	time.sleep(7.0)
 
 

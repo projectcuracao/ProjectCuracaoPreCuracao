@@ -30,34 +30,6 @@ except ImportError:
 	import conf
 
 
-def returnNameFromInterrupt(interrupt):
-	
-	if (interrupt == 0):
-		return "NOINTERRUPT"
-		
-	if (interrupt == 1):
-		return "NOREASON"
-		
-	if (interrupt == 2):
-		return "SHUTDOWN"
-		
-	if (interrupt == 3):
-		return "GETLOG"
-		
-	if (interrupt == 4):
-		return "ALARM1"
-		
-	if (interrupt == 5):
-		return "ALARM2"
-		
-	if (interrupt == 6):
-		return "ALARM3"
-
-	if (interrupt == 7):
-		return "REBOOT"
-
-	return "UNKNOWNINTERRUPT"
-		
 
 def  selectWind(source, delay):
 
