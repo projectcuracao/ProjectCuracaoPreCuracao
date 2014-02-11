@@ -66,7 +66,8 @@ def  watchdogdatacollect(source, delay):
 
 	ser = serial.Serial('/dev/ttyAMA0', 9600, timeout=1)
 	ser.open()
-	time.sleep(7.0)
+	#time.sleep(7.0)
+	time.sleep(9.0)
 
 
 	# send the first "are you there? command - RD - return from Arduino OK"
@@ -240,6 +241,7 @@ def  watchdogdatacollect(source, delay):
 		cur.execute(query)
 	
 		con.commit()
+		pclogging.log(pclogging.INFO, __name__, "RD OK from Pi to BatteryWatchDog")
 		
 	except mdb.Error, e:
   

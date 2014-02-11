@@ -141,27 +141,14 @@ if __name__ == '__main__':
     
 
     job = scheduler.add_cron_job(powerdatacollect.datacollect5minutes, minute="*/5", args=['main', 0])    
-    job = scheduler.add_cron_job(watchdogdatacollect.watchdogdatacollect, minute="*/5", args=['main', 30])    
+    job = scheduler.add_cron_job(watchdogdatacollect.watchdogdatacollect, minute="1,6,11,16,21,26,31,36,41,46,51,56", args=['main', 0])    
     job = scheduler.add_cron_job(environdatacollect.environdatacollect, minute="*/15", args=['main', 10])    
-    job = scheduler.add_cron_job(systemstatistics.systemstatistics15minutes, minute="*/15", args=['main', 20])    
+    job = scheduler.add_cron_job(systemstatistics.systemstatistics15minutes, minute="*/15", args=['main', 50])    
 
 
 
-    #job = scheduler.add_cron_job(powersupplygraph.powersystemsupplygraph, minute="*/15", args=['main',5,60])    
-    #job = scheduler.add_cron_job(powersupplyvoltagesgraph.powersystemsupplyvoltagegraph, minute="*/15", args=['main',5, 120])    
-
-    #job = scheduler.add_cron_job(systemstatusgraph.systemstatusgraph, minute="*/15", args=['main',5,180])    
     
-    #job = scheduler.add_cron_job(environmentalgraph.environmentalgraph, minute="*/15", args=['main',5, 240])    
-    #job = scheduler.add_cron_job(environmentalgraph2.environmentalgraph2, minute="*/15", args=['main',5,300])    
-
-    #job = scheduler.add_cron_job(batterywatchdogcurrentgraph.batterywatchdogcurrentgraph, minute="*/15", args=['main',5,360])    
-    #job = scheduler.add_cron_job(batterywatchdogvoltagegraph.batterywatchdogvoltagegraph, minute="*/15", args=['main',5,720])    
-    
-    #job = scheduler.add_cron_job(solarwindgraph.solarwindgraph, minute="*/15", args=['main',5,780])    
-    
-    
-    job = scheduler.add_cron_job(doallgraphs.doallgraphs, minute="*/15", args=['main',10,60])    
+    job = scheduler.add_cron_job(doallgraphs.doallgraphs, minute="*/15", args=['main',10,70])    
 
 
     # camera 
