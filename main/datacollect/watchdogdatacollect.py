@@ -241,7 +241,7 @@ def  watchdogdatacollect(source, delay):
 		cur.execute(query)
 	
 		con.commit()
-		pclogging.log(pclogging.INFO, __name__, "RD OK from Pi to BatteryWatchDog")
+		# pclogging.log(pclogging.INFO, __name__, "RD OK from Pi to BatteryWatchDog")
 		
 	except mdb.Error, e:
   

@@ -45,9 +45,23 @@ def  sweepShutter(source, delay):
 	pclogging.log(pclogging.INFO, __name__, "Sweep Shutter")
 
 def  takePicture(source):
+
+
+
+        try:
+	         f = open("/home/pi/ProjectCuracao/main/state/exposure.txt", "r")
+	         tempString = f.read()
+	         f.close()
+	         lowername = tempString
+
+        except IOError as e:
+		 lowername = "auto"
+
+	exposuremode = lowername
 	# take picture
 	print "taking picture"
-	output = subprocess.check_output ("raspistill -o /home/pi/RasPiConnectServer/static/picameraraw.jpg -rot 180 -t 750",shell=True, stderr=subprocess.STDOUT )
+	cameracommand = "raspistill -o /home/pi/RasPiConnectServer/static/picameraraw.jpg -rot 180 -t 750 -ex " + exposuremode
+	output = subprocess.check_output (cameracommand,shell=True, stderr=subprocess.STDOUT )
 	output = subprocess.check_output("convert '/home/pi/RasPiConnectServer/static/picameraraw.jpg' -pointsize 72 -fill white -gravity SouthWest -annotate +50+100 'ProjectCuracao %[exif:DateTimeOriginal]' '/home/pi/RasPiConnectServer/static/picamera.jpg'", shell=True, stderr=subprocess.STDOUT)
 
 	pclogging.log(pclogging.INFO, __name__, source )
