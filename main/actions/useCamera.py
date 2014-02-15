@@ -61,6 +61,7 @@ def  takePicture(source):
 	# take picture
 	print "taking picture"
 	cameracommand = "raspistill -o /home/pi/RasPiConnectServer/static/picameraraw.jpg -rot 180 -t 750 -ex " + exposuremode
+	print cameracommand
 	output = subprocess.check_output (cameracommand,shell=True, stderr=subprocess.STDOUT )
 	output = subprocess.check_output("convert '/home/pi/RasPiConnectServer/static/picameraraw.jpg' -pointsize 72 -fill white -gravity SouthWest -annotate +50+100 'ProjectCuracao %[exif:DateTimeOriginal]' '/home/pi/RasPiConnectServer/static/picamera.jpg'", shell=True, stderr=subprocess.STDOUT)
 
